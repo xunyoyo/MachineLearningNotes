@@ -1,0 +1,478 @@
+\documentclass{article}
+\usepackage{ctex}
+\usepackage{graphicx}
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage{newtxtext}
+\usepackage[bookmarks=true, colorlinks, citecolor=blue, linkcolor=black]{hyperref}
+\usepackage{geometry}
+\usepackage{lipsum} % 该宏包是通过 \lipsum 命令生成一段本文，正式使用时不需要引用该宏包
+\usepackage[dvipsnames,svgnames]{xcolor}
+\usepackage[strict]{changepage} % 提供一个 adjustwidth 环境
+\usepackage{framed} % 实现方框效果
+
+\usepackage{tcolorbox}
+
+% 中文定理环境
+% \indent 为了段前空两格
+
+\newtheorem{theorem}{\indent 定理}[section]
+\newtheorem{lemma}[theorem]{\indent 引理}
+\newtheorem{proposition}[theorem]{\indent 命题}
+\newtheorem{corollary}[theorem]{\indent 推论}
+\newtheorem{definition}{\indent 定义}[section]
+\newtheorem{example}{\indent 例}[section]
+\newtheorem{remark}{\indent 注}[section]
+\newenvironment{solution}{\begin{proof}[\indent\bf 解]}{\end{proof}}
+\renewcommand{\proofname}{\indent\bf 证明}
+
+% % English theorem environment
+% \newtheorem{theorem}{Theorem}[section]
+% \newtheorem{lemma}[theorem]{Lemma}
+% \newtheorem{proposition}[theorem]{Proposition}
+% \newtheorem{corollary}[theorem]{Corollary}
+% \newtheorem{definition}{Definition}[section]
+% \newtheorem{remark}{Remark}[section]
+% \newtheorem{example}{Example}[section]
+% \newenvironment{solution}{\begin{proof}[Solution]}{\end{proof}}
+
+\geometry{a4paper,centering,scale=0.8}
+% environment derived from framed.sty: see leftbar environment definition
+\definecolor{formalshade}{rgb}{0.95,0.95,1} % 文本框颜色
+% ------------------******-------------------
+% 注意行末需要把空格注释掉，不然画出来的方框会有空白竖线
+\newenvironment{quoteblock}{%
+\def\FrameCommand{%
+\hspace{1pt}%
+{\color{DarkBlue}\vrule width 2pt}%
+{\color{formalshade}\vrule width 4pt}%
+\colorbox{formalshade}%
+}%
+\MakeFramed{\advance\hsize-\width\FrameRestore}%
+\noindent\hspace{-4.55pt}% disable indenting first paragraph
+\begin{adjustwidth}{}{7pt}%
+\vspace{2pt}\vspace{2pt}%
+}
+{%
+\vspace{2pt}\end{adjustwidth}\endMakeFramed%
+}
+% ------------------******-------------------
+\definecolor{greenshade}{rgb}{0.90,0.99,0.91} % 绿色文本框，竖线颜色设为 Green
+\definecolor{redshade}{rgb}{1.00,0.90,0.90}% 红色文本框，竖线颜色设为 LightCoral
+\definecolor{brownshade}{rgb}{0.99,0.97,0.93} % 莫兰迪棕色，竖线颜色设为 BurlyWood
+
+\newenvironment{solblock}{%
+\def\FrameCommand{%
+\hspace{1pt}%
+{\color{BurlyWood}\vrule width 2pt}%
+{\color{brownshade}\vrule width 4pt}%
+\colorbox{brownshade}%
+}%
+\MakeFramed{\advance\hsize-\width\FrameRestore}%
+\noindent\hspace{-4.55pt}% disable indenting first paragraph
+\begin{adjustwidth}{}{7pt}%
+\vspace{2pt}\vspace{2pt}%
+}
+{%
+\vspace{2pt}\end{adjustwidth}\endMakeFramed%
+}
+
+\newenvironment{quesblock}{%
+\def\FrameCommand{%
+\hspace{1pt}%
+{\color{Green}\vrule width 2pt}%
+{\color{greenshade}\vrule width 4pt}%
+\colorbox{greenshade}%
+}%
+\MakeFramed{\advance\hsize-\width\FrameRestore}%
+\noindent\hspace{-4.55pt}% disable indenting first paragraph
+\begin{adjustwidth}{}{7pt}%
+\vspace{2pt}\vspace{2pt}%
+}
+{%
+\vspace{2pt}\end{adjustwidth}\endMakeFramed%
+}
+
+
+
+% ------------------define markerblock-------------------
+\tcbuselibrary{most} 
+\newtcolorbox{markerblock}[1][]{enhanced,
+  before skip=2mm,after skip=3mm,
+  boxrule=0.4pt,left=5mm,right=2mm,top=1mm,bottom=1mm,
+  colback=yellow!20,
+  colframe=yellow!40!black,
+  sharp corners,rounded corners=southeast,arc is angular,arc=3mm,
+  underlay={%
+    \path[fill=tcbcolback!80!black] ([yshift=3mm]interior.south east)--++(-0.4,-0.1)--++(0.1,-0.2);
+    \path[draw=tcbcolframe,shorten <=-0.05mm,shorten >=-0.05mm] ([yshift=3mm]interior.south east)--++(-0.4,-0.1)--++(0.1,-0.2);
+    \path[fill=yellow!80!black,draw=none] (interior.south west) rectangle node[white]{\Huge\bfseries !} ([xshift=4mm]interior.north west);
+    },
+  drop fuzzy shadow,#1}
+
+% ---------------define tips--------------
+
+\definecolor{tipscolor}{rgb}{0.77,0.72,0.65} % 莫兰迪棕色
+\newtcolorbox{tipsblock}[2][]
+{enhanced,breakable,
+left=12pt,right=12pt,% 左右边距
+% fonttitle=\bfseries, % 可以设置标题是否粗体
+coltitle=white, % 标题字体颜色
+colbacktitle=tipscolor, % 标题背景颜色
+attach boxed title to top left={yshifttext=-1mm},
+boxed title style={skin=enhancedfirst jigsaw,arc=1mm,bottom=0mm,boxrule=0mm},
+boxrule=1pt, % 边框线宽
+colback=OldLace, % 文本框背景颜色
+colframe=tipscolor, % 框线颜色
+sharp corners=northwest,
+% drop fuzzy shadow, % 可以选择是否设置阴影效果
+title=\vspace{3mm}\textbf{#2},
+arc=1mm,
+#1}
+% ------------------******-------------------
+\newenvironment{thmblock}[1][\textbf{Theorem}]{\begin{tcolorbox}[title=\textbf{#1}, colback=red!5,colframe=red!75!black]}{\end{tcolorbox}}
+
+\newenvironment{defblock}[1][\textbf{Definition}]{\begin{tcolorbox}[colback = Emerald!10, colframe = cyan!40!black, title = \textbf{#1}]}{\end{tcolorbox}}
+
+\newenvironment{lemmablock}[1][\textbf{Lemma}]{\begin{tcolorbox}[title=\textbf{#1},colback=SeaGreen!10!CornflowerBlue!10,colframe=RoyalPurple!55!Aquamarine!100!]}{\end{tcolorbox}}
+
+\newenvironment{propblock}[1][\textbf{Proposition}]{\begin{tcolorbox}
+[title = \textbf{#1}, colback=Salmon!20, colframe=Salmon!90!Black]}{\end{tcolorbox}}
+
+\newenvironment{colblock}[1][\textbf{Collary}]{\begin{tcolorbox}[colback=JungleGreen!10!Cerulean!15,colframe=CornflowerBlue!60!Black,title = \textbf{#1}]}{\end{tcolorbox}}
+% ----------------*******---------------
+
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\fancypagestyle{plain}{
+\fancyhf{}
+\lhead{2023}
+\chead{\centering{Notes of Machine Learning}}
+\rhead{\thepage\ of \pageref{LastPage}}
+\lfoot{}
+\cfoot{}
+\rfoot{}}
+\pagestyle{plain}
+
+
+
+% --------------Basic Information-----------
+
+\title{\textbf{{Machine Learning}}}
+\author{Chenxu Wang}
+\date{\today}
+
+
+% ------------------******-------------------
+\begin{document}
+\maketitle
+
+\section{Machine Learning}
+
+\begin{colblock}[Definition of Machine Learning]
+    At the start of this class, one define Machine Learning is automatically find the function which could address our question.
+\end{colblock}
+
+So how do you tell the machine what function you're looking for?
+
+\subsection{Supervised Learning}
+
+Need to be supplied to machine Labeled data. Calculate the Loss of the corresponding Function to determine whether it is good or bad.
+
+\subsection{Reinforcement Learning}
+
+
+Let the machine find its own strategy, and only Reward the machine to guide the learning.
+
+\section{Regression - Case Study}
+
+
+Take Pokemon's Combat Power. Find a Function that predicts the evolutionary CP value. Namely:
+
+$$
+f(x)=CP_{after}\quad (x \quad \text{is Pokemon's all info})
+$$
+
+\begin{enumerate}
+    \item Model
+
+    Let's assume that this function is $y = b + w \cdot x_{cp}$ Where $b$, $w$ can take any value.
+
+    \begin{colblock}[Definition of Linear Model]
+    $x_i$ : an attribute(or feature) of input x.\\
+    $w_i$ : weight.\\
+    $b$ : bias.
+    $$
+    y = b + \sum w_i x_i
+    $$
+    \end{colblock}
+
+    \item Goodness of Function
+
+    There exist many real data. Denoted as: $(x^1,\hat{y}^1),\cdots,(x^{10},\hat{y}^{10})$ .
+
+    To evaluate the Function, we define a loss function $L$. Input: a \textbf{function}, Output: how \textbf{bad} it is.
+
+    $$
+    L(f) = L(w,b)= \sum_{n=1}^{10}\left( b+\left(w \cdot x_{c p}^{n}\right)\right)^{2}
+    $$
+
+    Now we should use the loss function to pick the best Function in model function set out
+
+    We denote the function as:
+
+    $$
+    f^*=arg \min_f L(f)
+    $$
+
+     $$
+    w^*,b^*=arg \min_{w,b} L(w,b)
+    $$
+
+    And how to solve the target function out?
+
+    \item Gradient Descent
+
+    A new method the solve this equation: \textbf{Gradient Descent}.
+
+    \begin{propblock}[How To Use Gradient Descent]
+        \begin{itemize}
+            \item In $\mathbb{R}$
+            
+            \begin{itemize}
+                \item Randomly pick an initial value $w^0$
+                
+                \item Compute $\left.\frac{d L}{d w}\right|_{w=w^{0}}$
+
+                If value is negative we should increase $w$. Otherwise decrease $w$.
+    
+                \item Parameter update: $w^0-\eta \left.\frac{d L}{d w}\right|_{w=w^{0}}\to w^1$ the $\eta$ is called \textit{learning rate}.
+    
+                \item Compute $\left.\frac{d L}{d w}\right|_{w=w^{1}}$
+    
+                \item Many iteration...
+    
+                \item we get the Local Minimum (Local Optimal). But in Linear Regression, There is no Local Optimal in the function.
+            \end{itemize}
+            
+            \item In $\mathbb{R}^n$
+
+            \begin{itemize}
+                \item Randomly pick an initial value $w^0,b^0$
+                
+                \item Compute $\left.\frac{\partial L}{\partial w}\right|_{w=w^{0}, b=b^{0}},\left.\frac{\partial L}{\partial b}\right|_{w=w^{0}, b=b^{0}}$
+    
+                \item Parameter update: $w^0-\eta\left.\frac{\partial L}{\partial w}\right|_{w=w^{0}, b=b^{0}}\to w^1$ ,$b^0-\eta\left.\frac{\partial L}{\partial b}\right|_{w=w^{0}, b=b^{0}}\to b^1$ 
+    
+                \item Many iteration...
+    
+                \item Equally, in Linear Regression the loss function $L$ is convex. Also called no Local Optimal.
+            \end{itemize}
+        \end{itemize} 
+    \end{propblock}
+
+    \begin{tipsblock}{Gradient}
+    
+        $$
+        \nabla L = \begin{bmatrix} \frac{\partial L}{\partial w} \\ \frac{\partial L}{\partial b}\end{bmatrix}
+        $$
+        
+    \end{tipsblock}
+
+    By calculating, we get $b=-188.4,w=2.7$ and errors in training data is $\sum e^n = 31.9$.
+    
+    Actually, we don't care errors in training data.What we really care about is the error on new data (testing data).
+
+    So, we get another 10 Pokemon as testing data. The errors is $\sum e^n = 35.0 >$ training data error.
+
+    \item Model Selection
+
+    How can we do better?
+    
+    We select a new model: 
+    $y=b+w_1\cdot x_{cp}+w_2\cdot(x_{cp})^2$
+    And so on... 
+
+    But when the selected function is complex, the testing error will increase instead. This phenomenon is called \textbf{Overfitting}.
+
+    In fact, when we get enough data, we find that the Pokemon species is the main cause of CP values.So back to step 1, redesign the model.
+
+    $$
+    \delta(x_s=\text{A})=\begin{cases}
+     1 & \text{ if } x_s=\text{A}\\
+     0 & \text{Otherwise}
+    \end{cases}
+    $$
+
+    $$
+    \begin{aligned} y= & b_{1} \cdot \delta\left(x_{s}=\text { Pidgey }\right) \\ & +w_{1} \cdot \delta\left(x_{s}=\text { Pidgey }\right) x_{c p} \\ & +b_{2} \cdot \delta\left(x_{s}=\text { Weedle }\right) \\ & +w_{2} \cdot \delta\left(x_{s}=\text { Weedle }\right) x_{c p} \\ & +b_{3} \cdot \delta\left(x_{s}=\text { Caterpie }\right) \\ & +w_{3} \cdot \delta\left(x_{s}=\text { Caterpie }\right) x_{c p} \\ & +b_{4} \cdot \delta\left(x_{s}=\text { Eevee }\right) \\ & +w_{4} \cdot \delta\left(x_{s}=\text { Eevee }\right) x_{c p}\end{aligned}
+    $$
+
+    We will also consider whether other information about Pokemon may also influence the prediction of CP values. So we add a lot of other variables to form new functions:
+
+    $$
+    y^{\prime}=b_{1}+w_{1} \cdot x_{c p}+w_{2} \cdot\left(x_{c p}\right)^{2}
+    $$
+
+    $$
+    y=y^{\prime}+w_{3} \cdot x_{h p}+w_{4} \cdot\left(x_{h p}\right)^{2}+w_{5} \cdot x_{h}+w_{6} \cdot\left(x_{h}\right)^{2}+w_{7} \cdot x_{w}+w_{8} \cdot\left(x_{w}\right)^{2}
+    $$
+
+    But this model is Overfitting. We back to step 2, to \textit{Regularization}. We define the loss Function is:
+
+    $$
+    L=\sum_{n}\left(\hat{y}^{n}-\left(b+\sum w_{i} x_{i}\right)\right)^{2}+\lambda \sum\left(w_{i}\right)^{2}
+    $$
+
+    The reason we added $\lambda$ is to smooth out its function so that it is not too sensitive to changes in data.At the same time, we don't need to put the bias in it. The value of $\lambda$ need us to test it out by hand.
+\end{enumerate}
+
+\section{Basic Concept}
+
+Where is the error come from? When we really know where the error comes from, we can take targeted solutions.
+
+Exist a unique perfect function $\hat f$. The only things we could do is let the $f^*$ which come from training data be closer to $\hat f$. And the distance from $\hat f$ to $f^*$ consist of Bias and Variance.
+
+\subsection{Bias and Variance of Estimator}
+
+The composition of the difference between the two functions is shown in the figure below.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[scale=0.6]{pic/difference.png}
+  \label{fig:my_label}
+\end{figure}
+
+In a word sum up how to judge which of the two causes of the error. Before we judge, we need to know that in the same model, different initial data will produce different functions.
+
+When we have enough initial data sets, averaging the functions of each set yields an average function close to the perfect function.When the difference between the average function and the perfect function is larger, the problem appears on bias.
+
+Your Function sets like the blue circle. The lager set you have the less loss in bias. Because the blue circle include the target function.
+
+\newpage
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[scale=0.5]{pic/Bias.png}
+  \label{fig:my_label}
+\end{figure}
+
+And next is variance. It seems that the average bias of a quintic function is small enough. But in the test data there will be a larger error, that is, the picture of the data point is not concentrated enough.
+
+There are two ways to solve this problem, one is to simplify the model, the other is to smooth the model.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[scale=0.5]{pic/Variance.png}
+  \label{fig:my_label}
+\end{figure}
+
+
+
+
+
+
+
+
+
+
+\end{document}
+艾萨克·牛顿（1643年1月4日$\sim$1727年3月31日），爵士，英国皇家学会会长，英国著名的物理学家、数学家，百科全书式的“全才”，著有《自然哲学的数学原理》《光学》。他在1687年发表的论文《自然定律》里，对万有引力和三大运动定律进行了描述。这些描述奠定了此后三个世纪里物理世界的科学观点，并成为了现代工程学的基础。他通过论证开普勒行星运动定律与他的引力理论间的一致性，展示了地面物体与天体的运动都遵循着相同的自然定律；为太阳中心说提供了强有力的理论支持，并推动了科学革命。牛顿曾经说过一句很著名的话
+
+\begin{quoteblock}
+    如果说我看得远，那是因为我站在巨人的肩上。
+
+    \rightline{——牛顿}
+\end{quoteblock}
+
+牛顿第一定律的内容为
+
+\begin{thmblock}[牛顿第一定律]
+    任何一个物体总是保持静止状态或者匀速直线运动状态，直到有作用在它上面的外力迫使它改变这种状态为止。
+\end{thmblock}
+
+我们在初中和高中都已经学过了牛顿第一定律，因此不在此做过多阐释。但值得指出的是
+\begin{tipsblock}{补充}
+    \begin{itemize}
+        \item 牛顿第一定律给出了一个没有加速度的参考系——惯性系，使人们对物理问题的研究和物理量的测量有意义，从而使它成为整个力学甚至物理学的出发点。牛顿第二、第三定律以及由牛顿运动定律建立起来的质点力学体系，如动量定理、动量守恒定律、动能定理等，只对惯性系成立。
+        \item 牛顿第一定律是其他原理的前提和基础。第一定律中包含的基本概念，奠定了经典力学的概念基础，从而使它处于理论系统中第一个原理的前提地位，这表现在：
+              \begin{enumerate}
+                  \item 首次批驳了延续两千多年的亚里士多德等人错误的力的概念，为确立正确的力的概念奠定了基础。
+                  \item 第一次科学地给出了力的定性定义（含力的本质和力的效果）。
+                  \item 第一次提出了经典力学的几个基本概念，为第二、第三定律以及由牛顿运动定律建立起来的质点力学体系原理奠定了概念基础。
+              \end{enumerate}
+    \end{itemize}
+\end{tipsblock}
+
+使用牛顿第一定律时需要注意如下情况：
+
+\begin{markerblock}
+    牛顿第一定律只适用于惯性参考系。在质点不受外力作用时，能够判断出质点静止或作匀速直线运动的参考系一定是惯性参考系，因此只有在惯性参考系中牛顿第一运动定律才适用。
+    牛顿第一定律在非惯性参考系（即有加速度的系统）中不适用，因为不受外力的物体，在该参考系中也可能具有加速度，这与牛顿第一定律相悖。
+\end{markerblock}
+
+接下来我们学习牛顿第二定律。牛顿指出，力是改变物体运动状态的原因；牛顿第二定律用数学公式刻画了力和物体运动状态改变的关系。
+\begin{thmblock}[牛顿第二定律]
+    动量为$\vec{p}$的质点，在外力的作用下，其动量随时间的变化率同该质点所受的外力成正比，并与外力的方向相同。用公式表达为
+    $$
+        \vec{F}=\frac{\text{d} \vec{p}}{\text{d} t}
+    $$
+\end{thmblock}
+
+这是牛顿在《自然哲学的数学原理》发表的原始表述。为了理解这一式子，我们给出动量的定义：
+\begin{defblock}[动量的定义]
+    动量$p$是与物体的质量$m$和速度$v$相关的物理量。动量为矢量，由下式给定
+    $$
+        \vec{p}=m\times \vec{v}
+    $$
+\end{defblock}
+
+牛顿第二定律的推论，也即其常见表述为
+\begin{colblock}[牛顿第二定律的常见表述]
+    物体加速度的大小与合外力成正比，与物体质量成反比（与物体质量的倒数成正比）。加速度的方向与合外力的方向相同。用公式表示即为
+    $$
+        \vec{F}=m\times \vec{a}
+    $$
+\end{colblock}
+
+现在我们快速地证明牛顿第二定律的两种表述是等价的。
+\begin{proof}
+    牛顿第二定律指出，
+    \begin{equation}
+        \vec{F}=\frac{\text{d} \vec{p}}{\text{d} t}\label{def:f}
+    \end{equation}
+    再根据动量的定义，
+    \begin{equation}
+        \vec{p}=m\times \vec{v}
+    \end{equation}
+    因此有，
+    \begin{equation}
+        \frac{\text d \vec{p}}{\text d t}=\frac{\text d \vec{m\times\vec{v}}}{\text d t}=m\times \vec{a}\label{derivative}
+    \end{equation}
+    从等式(\ref{def:f})和等式(\ref{derivative})可以得出，
+    $$
+        \vec{F}=m\times \vec{a}
+    $$
+\end{proof}
+
+了解牛顿第二定律后，思考如下命题的正确性。
+\begin{propblock}[命题]
+    做匀速圆周运动的物体必定受力。
+\end{propblock}
+
+接下来做一道简单的关于牛顿第二定律的题。
+
+\begin{quesblock}
+    已知一个物块的质量为$10kg$，若物块以$10m/s$的速度冲上滑板，滑板的动摩擦因数$\mu=0.1$，请问物块需要多久会静止？（重力加速度$g$的大小为$g=10m/s^2$）
+\end{quesblock}
+
+\begin{solblock}
+    \begin{solution}
+        \begin{equation*}
+            \begin{aligned}
+                F=\mu m g            \\
+                a =\frac{F}{m}=\mu g \\
+                t = \frac{v}{a}=10s
+            \end{aligned}
+        \end{equation*}
+    \end{solution}
+\end{solblock}

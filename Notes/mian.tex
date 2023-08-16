@@ -366,13 +366,92 @@ There are two ways to solve this problem, one is to simplify the model, the othe
   \label{fig:my_label}
 \end{figure}
 
+\section{Gradient Descent}
 
+In step 3, we have to solve the following optimization problem:
+$$
+\theta ^* = arg \min_\theta L(\theta) 
+$$
+$L$: loss function \ $\theta$: parameters
 
+Suppose that $\theta$ in $\mathbb{R} ^ n$. Randomly start at $\theta^0$. And do iterate：$\theta^{n+1} = \theta^n - \eta \nabla L(\theta^n)$ .
 
+\subsection{Tuning Learning Rates}
 
+There is a popular \& simple idea: Reduce the learning rate by some factor every few epochs. At the beginning, we are far from the destination, so we use larger learning rate. After several epochs, we are close to the destination, so we reduce the learning rate. There is an example:
+$$
+\eta ^ t = \frac{\eta}{\sqrt{t + 1}}
+$$
+Learning rate cannot be one-size-fits-all. Giving different parameters different learning rates.
 
+\subsubsection{Adagrad Method}
 
+\begin{colblock}[Definition of Adagrad Method]
+    Divide the learning rate of each parameter by the \textbf{root mean square} of its previous derivatives.
+\end{colblock}
 
+\begin{propblock}[How To Use Adagrad]
+    Let $k^t$ is the t-th iteration's \textit{learning rates}, $\sigma^t$ is \textbf{root mean square} of the previous derivatives of parameter. Here is the learning rate above:
+    
+    $$
+    w^{t+1} = w^t - k^tg^t= w^t - \frac{\eta^t}{\sigma^t}g^t\quad (\eta^t = \frac{\eta}{\sqrt{t+1}}\quad g^{t}=\frac{\partial L\left(w^{t}\right)}{\partial w})
+    $$
+
+    $$
+    \sigma^t = \sqrt{\frac{1}{n+1}\sum_{i=0}^t(g^i)^2}\quad k^t = \frac{\eta}{\sqrt{\sum_{t=0}^{t}(g^i)^2}}
+    $$
+    
+\end{propblock}
+
+It can be mathematically proven that the best step size is $\frac{\partial L(x^t)/\partial x}{\partial^2 L(x^t)/\partial x^2}$ . In fact, the reciprocal of root mean square actually replaces the second partial derivative.
+
+\subsection{Make Descent Faster}
+
+There is another method of descent: \textbf{Stochastic Gradient Descent}. This is the opposite of the previous gradient descent. This method pick only one example in one time. Make loss function for only one example:
+$$
+L^n=\left(\hat{y}^n-\left(b+\sum w_ix_i^n\right)\right)^2
+$$
+$$
+\theta^i=\theta^{i-1}-\eta\nabla L^n{\left(\theta^{i-1}\right)}
+$$
+
+\subsection{Make Data More Suitable}
+
+Let's assume there's only two dimensions. When the range of data in one dimension is small and the range of data in the other dimension is large. In the process of gradient descent iteration, the optimization of function can not directly point to the optimal function. Therefore, we need \textbf{Feature Scaling}. 
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[scale=0.5]{pic/Feature Scaling.png}
+  \label{fig:my_label}
+\end{figure}
+
+\begin{colblock}[Definition of Feature Scaling]
+    Make different features have the same scaling.
+\end{colblock}
+
+\begin{propblock}[How To Do Feature Scaling]
+    For each dimension $i$: mean: $m_i$, standard deviation: $\sigma_i$.
+    
+    For each point, new $x^i$ equal $\frac{x^i-x_i}{\sigma_i}$.
+\end{propblock}
+
+\subsection{Principia Mathematica In Gradient Descent}
+
+All the variables in the following are considered to be in $\mathbb{R}^n$.
+
+Let $h(x)$ be any function infinitely differentiable around $x = x_0$. When $x$ is close to $x_0$:
+$$
+h(x)\approx h(x_0)+h'(x_0)(x-x_0) \quad (h'\ \text{is Jacobian matrix})
+$$
+In the same time, $h'(x_0)(x-x_0)$ can seem as a vector time another vector:
+$$
+(\partial_1 h(x_0),\cdots,\partial_n h(x_0))\cdot (x^1-x_0^1,\cdots,x^n-x_0^n)=h'(x_0)(x-x_0)
+$$
+
+When two vectors have the opposite direction, the answer can have their minimum value. Equally, they need to be kept within a very small range -- $\eta$. So, we have the equation:
+$$
+x = x_0 - \eta \nabla L(x_0)
+$$
 
 
 \end{document}

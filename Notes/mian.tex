@@ -461,9 +461,113 @@ In this website, there are all knowledge points about this lecture. This knowled
     \href{https://zhuanlan.zhihu.com/p/208178763}{机器学习2 -- 优化器（SGD、SGDM、Adagrad、RMSProp、Adam） -- 谢杨易}
 \end{quoteblock}
 
+\section{Classification}
 
+Next, we will introduce the mathematical principles of Classification. Let's assume there are only two groups: Class 1 ($C_1$) and Class 2 ($C_2$). And give a symbol $x$ which mean is what we pick.  And give a symbol $x$ which mean is what things we pick.
+$$
+P(C_1|x) = \frac{P(x|C_1)P(C_1)}{P(x|C_1)P(C_1)+P(x|C_2)P(C_2)}
+$$
+Easily, the $P(C_1),P(C_2)$ can be solved by $\frac{N_1}{N_1+N_2},\frac{N_2}{N_1+N_2}$. And how to solve out the $P(x|C_1)$ and $P(x|C_2)$ is a big issue.
 
+Because the distribution of variables is continuous, we might as well choose Multivariate Gaussian Distribution to solve the problem.
+$$
+f_{\mu,\Sigma}(x)=\frac1{(2\pi)^{D/2}}\frac1{|\Sigma|^{1/2}}\exp\left\{-\frac12(x-\mu)^T\Sigma^{-1}(x-\mu)\right\}
+$$
+Input: vector $x$, Output: probability of sampling $x$. 
 
+According to Gaussian Multivariate Distribution, we can define a new function called Likelihood Function. We hope that all of the samples' probability of occurrence to be maximum.
+$$
+\mu^*,\Sigma^*=arg\max_{\mu,\Sigma}L(\mu,\Sigma)
+$$
+$$
+\begin{aligned}L(\mu,\Sigma)&=f_{\mu,\Sigma}(x^1)f_{\mu,\Sigma}(x^2)f_{\mu,\Sigma}(x^3)\cdots f_{\mu,\Sigma}(x^{n})\end{aligned}
+$$
+At the same time, through mathematical proof, we can directly calculate $\eta^*,\Sigma^*$.
+$$
+\mu^* = \sum_{i=1}^n x^i\quad \Sigma^* = \frac{1}{n}\sum_{i=1}^n(x^i-\mu^*)(x^i-\mu^*)^T
+$$
+
+So we can get a calculation for $P(x|C_i)$: $f_{\mu^i,\Sigma^i}(x)$. Therefore, we can get the $P(C_i|x)$.
+
+\begin{propblock}[How To Modifying Model]
+    We assume that all parameters use the same $\Sigma$. The Loss function is 
+    $$
+    L(\mu^1,\cdots,\mu^n,\Sigma) = f_{\mu^1,\Sigma}(x^{\cdots})\times\cdots\times f_{\mu^n,\Sigma}(x^{\cdots})
+    $$
+    $\mu^1,\cdot,\mu^n$ are same, and $\Sigma = \sum_{i=1}^{n}\frac{N^i}{N}\Sigma^i$.
+    
+    In the end, The $P$ calculate method can be transformed into linear method by using Sigmoid Function:
+    $$
+    P_{w,b}(C_1|x) = \sigma(z)
+    $$
+    $$
+    z = w \cdot x + b = \sum_{i} w_ix_i + b
+    $$
+    $$
+    \sigma (z) = \frac{1}{1+\exp({-z})}
+    $$
+\end{propblock}
+
+\section{Logistic Regression}
+
+Above, we already know that Likelihood in the same $\Sigma$ case can be represented linearly. 
+
+\subsection{Double-class Classification}
+
+We assume that we only classify double things. That we have Class 1($C_1$) and Class 2($C_2$). Assume the data is generated based on $f_{w,b}(x) = P_{w,b}(C_1|x)$.
+
+Given a set of $w$ and $b$, we can generate its Likelihood Function in one class:
+$$
+L(w,b)=f_{w,b}(x^1)f_{w,b}(x^2)\left(1-f_{w,b}(x^3)\right)\cdots f_{w,b}(x^N) \quad (x^3 \  \text{belongs to }C_2\ \text{and so on.})
+$$
+Since we are looking for the maximum of Likelihood here, but we need to find the minimum like the Loss function.
+$$
+\begin{aligned}w^*,b^*=arg\max_{w,b}L(w,b)\Leftrightarrow  w^*,b^*=arg\min_{w,b}-\ln L(w,b)\end{aligned}
+$$
+And the form of Loss can transform into other form:
+$$
+\begin{aligned}\sum_n-\left[\hat{y}^n\ln f_{w,b}(x^n)+(1-\hat{y}^n)\ln\left(1-f_{w,b}(x^n)\right)\right]\end{aligned}
+$$
+
+The next step is find the best function. But why we don't use Square Error as our loss function? There is a question.
+
+\begin{markerblock}
+    Whatever the position from target and now position are far or close. The value of $\partial L/\partial\ w_i = 0$. 
+\end{markerblock}
+
+\subsection{Multi-class Classification}
+
+Given some Classes and Linear Function: $C_1,C_2,\cdots,C_n$ ; $z_i = w^i\cdot x + b_i$ . And let $y_i$ is $P(C_i|x)$. Every $y_i$ can be output by:
+$$
+y_i = \frac{e^{z_i}}{\sum_{j=1}^n e^{z_j}}
+$$
+Next step like above one: $L(w^i,b^i) = -\sum_{i=1}^n \hat{y}_i\ln y_i$, do Gradient Descent.
+
+\subsection{Feature Transformation}
+
+But there exist some limitation of Logistic Regression. When we could not easily divide Class into linear parts:
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[scale=0.3]{pic/ClassTran.png}
+  \label{fig:my_label}
+\end{figure}
+
+In this condition, we have to do \textbf{Feature Transformation}. It can solve this problem effectively. Again, this process is also expected to be done automatically by the machine. After doing Feature Transformation, we can use the transformed data to do Classification.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[scale=0.5]{pic/Feature Transformation .png}
+  \label{fig:my_label}
+\end{figure}
+
+\section{Brief Introduction of Deep Learning}
+
+Because this knowledge point has not important information. I quote other person's notes.
+
+\begin{quoteblock}
+    \href{https://zhuanlan.zhihu.com/p/208178763}{2020李宏毅机器学习笔记-Brief Introduction of Deep Learning}
+\end{quoteblock}
 
 \end{document}
 艾萨克·牛顿（1643年1月4日$\sim$1727年3月31日），爵士，英国皇家学会会长，英国著名的物理学家、数学家，百科全书式的“全才”，著有《自然哲学的数学原理》《光学》。他在1687年发表的论文《自然定律》里，对万有引力和三大运动定律进行了描述。这些描述奠定了此后三个世纪里物理世界的科学观点，并成为了现代工程学的基础。他通过论证开普勒行星运动定律与他的引力理论间的一致性，展示了地面物体与天体的运动都遵循着相同的自然定律；为太阳中心说提供了强有力的理论支持，并推动了科学革命。牛顿曾经说过一句很著名的话

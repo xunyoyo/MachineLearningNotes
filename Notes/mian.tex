@@ -566,8 +566,145 @@ In this condition, we have to do \textbf{Feature Transformation}. It can solve t
 Because this knowledge point has not important information. I quote other person's notes.
 
 \begin{quoteblock}
-    \href{https://zhuanlan.zhihu.com/p/208178763}{2020李宏毅机器学习笔记-Brief Introduction of Deep Learning}
+    \href{https://blog.csdn.net/zn961018/article/details/116084191}{2020李宏毅机器学习笔记-Brief Introduction of Deep Learning}
 \end{quoteblock}
+
+\section{Backpropagation}
+
+In practical applications, there are usually thousands of variables. To compute the gradients efficiently, we use \textit{\textbf{backpropagation}}.
+
+In fact, the principle of backpropagation is Chain Rule. For example, there is a loss function we define:
+$$
+L(\theta) = \sum_{n=1}^N l^n(\theta)
+$$
+The partial derivative of this loss function is:
+$$
+\frac{\partial L(\theta)}{\partial w} = \sum_{n=1}^N\frac{\partial l^n(\theta)}{\partial w}
+$$
+
+We assume the neuron function is $z = w_1x^1+w_2x^2+b$. Then we can compute $\frac{\partial l}{\partial w}$.
+$$
+\frac{\partial l}{\partial w}=\frac{\partial z}{\partial w}\frac{\partial l}{\partial z}
+$$
+Obviously, $\frac{\partial z}{\partial w^1},\frac{\partial z}{\partial w^2}$ can easily be computed. But $\frac{\partial l}{\partial z}$ are not.
+
+We generate $z$ and put it into another function like Sigmoid Function. Then $\frac{\partial l}{\partial z}$ can be represented in:
+$$
+\frac{\partial l}{\partial z} = \frac{\partial a}{\partial z}\frac{\partial l}{\partial a}
+$$
+In here $a = \sigma(z)$. Obviously, $\frac{\partial a}{\partial z} = a'$. We can assume that there have $n$ neuron nodes and denoted it with $v_1,\cdots,v_n$. It can be divided into:
+$$
+\frac{\partial l}{\partial a} = \sum_{i=1}^n\frac{\partial v_i}{\partial a}\frac{\partial l}{\partial v_i}
+$$
+
+After doing so many times, we finally approached to the output layer. The $\frac{\partial l}{\partial a_k}$ finally can be computed. Next we put all the answers back and get the $\frac{\partial l}{\partial w}$. We call it \textit{\textbf{Backpropagation}}.
+
+\section{Tips for Training DNN}
+
+If you get bad results on your model, there is a \textit{Recipe of Deep Learning}. Two questions:
+\begin{itemize}
+    \item Do you get Good Results on Training Data?
+    \item Do you get Good Results on Testing Data?
+\end{itemize}
+
+\subsection{get Bad Results on Training Data}
+
+In this subsection, there exist two ways to address this issue.
+
+\subsubsection{New Activation Function}
+
+We used Sigmoid Function before. But this function also have some side effection. For example, if we use big delta $\Delta w$. On the contrary, the gradient $\frac{\partial l}{\partial w}$ will be smaller. Because after a certain point the growth rate will become very small.
+
+There are some other activation function:
+
+\begin{tipsblock}{Rectified Linear Unit (ReLU)}
+        $$
+        \sigma(z) = \left\{\begin{matrix}z  & z>0\\0  & z\le 0\end{matrix}\right.
+        $$
+        The reason are: 1.The gradient can fast to compute. 2.Biological reason(paper given). 3.Infinite Sigmoid with different biases. 4.Vanishing gradient problem.
+\end{tipsblock}
+
+\begin{tipsblock}{ReLU - variant}
+        Leaky ReLU:
+        $$
+        \sigma(z) = \left\{\begin{matrix}z  & z>0\\0.01z  & z\le 0\end{matrix}\right.
+        $$
+        \\
+        Parametric ReLU:
+        $$
+        \sigma(z) = \left\{\begin{matrix}z  & z>0\\\alpha z  & z\le 0\end{matrix}\right.
+        $$
+\end{tipsblock}
+
+\begin{tipsblock}{Maxout}
+        From a neuron to another neuron it have so many weight named $w_i$. We put a certain number weights into a group named $G_i$.
+
+        The activation is easily as:
+        $$
+        \alpha_{G_i} = \max(w_i) \quad w_i\in G_i
+        $$
+
+        By using Maxout like a map: $f:\mathbb R^n\to\mathbb R^m\quad(m = \text{size}(G))$
+
+        After do it, the activation function just like linear $f(x) = x$ in $\max(w_i)$.
+\end{tipsblock}
+
+\subsubsection{Adaptive Learning Rate}
+
+Like \textbf{RMSProp},\textbf{Momentum},\textbf{Adam}. It has already been mentioned above.
+
+\subsection{Bad Results on Testing Data}
+
+In this subsection, there exist three ways to address this issue.
+
+\subsubsection{Early Stopping}
+
+No more explanations.
+
+\subsubsection{Regularization}
+
+We will make a new loss function not only minimizing original cost but also close to zero in a set of weight. Make a function like this:
+$$
+L'(\theta) = L(\theta) + \lambda\frac{1}{2}\left \| \theta \right \|_{i} \quad(i = 1,2)
+$$
+$L(\theta)$ is original loss, $\theta$ is a set of weight $\{w_1,w_2,\cdots\}$. If $i=1$, we call it \textit{L1 regularization}. Other situations are same.
+
+L2 regularization (also called Weight Decay):
+$$
+\left \| \theta \right \|_{2}=(w_1)^2+(w_2)^2+\cdots
+$$
+$$
+\frac{\partial{L}^{\prime}}{\partial w}=\frac{\partial{L}}{\partial w}+\lambda w
+$$
+$$
+w^{t+1}\to w^t - \eta \frac{\partial{L}^{\prime}}{\partial w} = (1-\eta\lambda)w^t-\eta\frac{\partial{L}^{\prime}}{\partial w}
+$$
+
+L1 regularization:
+$$
+\left \| \theta \right \|_{1}=|w_1|+|w_2|+\cdots
+$$
+$$
+\frac{\partial{L}^{\prime}}{\partial w}=\frac{\partial{L}}{\partial w}+\lambda \text{sgn}(w)
+$$
+$$
+w^{t+1}\to w^t - \eta \frac{\partial{L}^{\prime}}{\partial w} = w^t-\eta\frac{\partial{L}}{\partial w}-\eta\lambda\text{sgn}(w^t)
+$$
+
+\subsubsection{Dropout}
+
+Each neuron has p\% to dropout before updating the parameters each time. we call it Dropout. For each mini-batch, we resample the dropout neurons.
+
+If we try not dropout we also can make all the weights times (1-p)\%. It is can be proved in math. It can be used in activation function like quasi linear function.
+
+\section{Why Deep}
+
+\begin{quoteblock}
+    \href{https://blog.csdn.net/ygp12345/article/details/108902064}{why deep learning?我们为什么要使用深度学习?--ygpGoogle}
+\end{quoteblock}
+
+
+
 
 \end{document}
 艾萨克·牛顿（1643年1月4日$\sim$1727年3月31日），爵士，英国皇家学会会长，英国著名的物理学家、数学家，百科全书式的“全才”，著有《自然哲学的数学原理》《光学》。他在1687年发表的论文《自然定律》里，对万有引力和三大运动定律进行了描述。这些描述奠定了此后三个世纪里物理世界的科学观点，并成为了现代工程学的基础。他通过论证开普勒行星运动定律与他的引力理论间的一致性，展示了地面物体与天体的运动都遵循着相同的自然定律；为太阳中心说提供了强有力的理论支持，并推动了科学革命。牛顿曾经说过一句很著名的话

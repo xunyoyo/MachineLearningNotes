@@ -699,9 +699,60 @@ If we try not dropout we also can make all the weights times (1-p)\%. It is can 
 
 \section{Why Deep}
 
+In fact, each layer can be considered as a Modular calculation. That is why we use deep layer not one layer. It can give good result in less data rather than bad in one layer.
+
 \begin{quoteblock}
     \href{https://blog.csdn.net/ygp12345/article/details/108902064}{why deep learning?我们为什么要使用深度学习?--ygpGoogle}
 \end{quoteblock}
+
+\section{Convolutional Neural Network}
+
+CNN is widely working in image classify. And why CNN for image? There are some reasons in here.
+
+If we use DNN to train the model, we will have a sea of weights like $1920\times 1080\times 3 \times l$. So big, isn't it? But from above section, each layer can be considered as a Modular calculation. We can split the image to many features. Such as bird's feather, beak. Every section only need a little size of pixels, and the same time, many neural input can share some same weight. Also, we can do subsampling to make the picture smaller.
+
+CNN can be considered as -- do many times Convolution and Max Pooling then put Flatten(output) into DNN.
+
+\subsection{Convolution}
+
+Some patterns are much smaller than the whole image. How to address?
+
+We use filter(info matrix) to get info in the filter size region like this picture:
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[scale=0.3]{pic/Property 1.png}
+  \label{fig:my_label}
+\end{figure}
+
+The same patterns appear in different regions. Moving filter can work perfectly. Every area in size of filter can generate one info like this picture:
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[scale=0.5]{pic/Property 2.png}
+  \label{fig:my_label}
+\end{figure}
+
+Muti-filter are same. Such as Colorful image(every filter have three layers), we call the special muti-filter's vector 3-D tensor.
+
+In this way, number of parameters can descent obviously. Have got tensor now, next issue is subsampling.
+
+\subsection{Max Pooling}
+
+Max Pooling is similar as Maxout. Assume we need half of size, put the tensor into many $2\times 2$ mini-tensor. Then get the maximum(also can use average or other) one as the feature mini-tensor.Therefore size of tensor turn into half.
+
+In here we don't talk about that how the CNN can be trained. Toolkit can solve it. In other target, we maybe not apply Max Pooling like Alpha-Go in chess.
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -743,14 +743,63 @@ Max Pooling is similar as Maxout. Assume we need half of size, put the tensor in
 
 In here we don't talk about that how the CNN can be trained. Toolkit can solve it. In other target, we maybe not apply Max Pooling like Alpha-Go in chess.
 
+\section{Graph Neural Network}
 
+In the modern time, graph is widely used in the deep learning. But how to put a graph into neural network as parameters. There are some issues in here:
 
+\begin{itemize}
+    \item How do we utilize the structures and relationship to help our model?
+    \item What if the graph is larger, like $20$k nodes?
+    \item What if we don‘t have the all the labels?
+\end{itemize}
 
+\subsection{Spatial-based GNN}
 
+There are some terminologies and methods. 
 
+\begin{colblock}[Definition of Aggregate]
+    Make all neighbor's feature to update next layer's hidden state.
+\end{colblock}
 
+\begin{colblock}[Definition of Readout]
+    Put all nodes' feature gathered to represent all of this graph.
+\end{colblock}
 
+\begin{markerblock}
+    List only a small number of easy-to-understand methods.
+\end{markerblock}
 
+\subsubsection{Neural Networks for Graph (NN4G)}
+
+We denoted every node as $v_i$. Assume that $v_1$ only connect with $v_2,v_3,v_4$. And every node have there own parameter denoted $x_i$, it's weight denoted as $w_i$. $h_i^j$ is on i-th node j-th layer's value.
+
+$$
+h^0_1 = w_1 x_1
+$$
+
+$$
+h^i_1 = \hat{w}_{1,i-1}(h^{i-1}_{2}+h^{i-1}_{3}+h^{i-1}_{4})\quad (i>1)
+$$
+
+We define $X_i = \frac{\sum_{k=1}^n h^i_k}{n}$. And Readout of it is:
+$$
+z = \sum^n w_iX_i
+$$
+It need to train out.
+
+I want to be lazy. So I only put other into list.
+\begin{itemize}
+    \item Diffusion-Convolution Neural Network (DCNN)
+    \item Diffusion Graph Convolution (DGC)
+    \item Mixture Model Networks (MoNET)
+    \item GraphSAGE
+    \item \textbf{Graph Attention Networks (GAN)}
+    \item Graph Isomorphism Network (GIN)
+\end{itemize}
+
+Because of my poor knowledge, I have to give up this section...
+
+\section{Recurrent Neural Network}
 
 
 

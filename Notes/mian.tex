@@ -801,6 +801,46 @@ Because of my poor knowledge, I have to give up this section...
 
 \section{Recurrent Neural Network}
 
+RNN is like a DNN with memory. The data in the RNN cell can be remembered and used in next RNN cell. There are some methods of RNN:
+
+\begin{itemize}
+    \item SimpleRNN
+    \item Bidirectional RNN
+    \item Long Short-term Memory (LSTM)
+\end{itemize}
+
+
+As its name SimpleRNN, the structure of SimpleRNN is simple. It like DNN only put in some memory unit in it. This is SimpleRNN figure:
+
+\newpage
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[scale=0.5]{pic/srnn.png}
+  \label{fig:my_label}
+\end{figure}
+
+Every data process through mid activation function will put in the memory unit and will use in next RNN as input's weight times on the input. Of course it can be deep.
+
+Bidirectional RNN is like entering input in positive and negative order and averaging the values in their memory cells.
+
+Long Short-term Memory is what we need to know. In fact, LSTM have three gates:Input gate,Forget gate and Output gate. We use Sigmoid Function as activation function to control it open or not. The structure like this:
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[scale=0.5]{pic/lstm.png}
+  \label{fig:my_label}
+\end{figure}
+
+But RNN have a big issue:The error surface is rough. The error surface is either very flat or very steep. But LSTM maybe can address this issue.
+
+\section{}
+
+
+
+
+
+
 
 
 

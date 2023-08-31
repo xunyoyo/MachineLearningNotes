@@ -834,16 +834,86 @@ Long Short-term Memory is what we need to know. In fact, LSTM have three gates:I
 
 But RNN have a big issue:The error surface is rough. The error surface is either very flat or very steep. But LSTM maybe can address this issue.
 
-\section{}
+\section{Semi-supervised Learning}
 
+\begin{colblock}[Definition of Semi-supervised Learning]
+    There is a set of unlabeled data, usually far more than labeled data. Using unlabeled data to develop model which trained by labeled. It is called Semi-supervised Learning.
+\end{colblock}
 
+Why semi-supervised learning helps? The \textbf{distribution} of the unlabeled data tell us something.
 
+\subsection{Semi-supervised Learning for Generative Model}
 
+For example, Given labeled training examples $x^r \in C_1,C_2$. Looking for most likely prior probability $P(C_i)$ and class-dependent probability $P(x|C_i)$. $P(x|C_i)$ is a Gaussian parameterized by $\mu^i$ and $\sigma$. Then we have a label trained model. But the model must not exactly. Therefore we use unlabeled data $x^u$ to help re-estimate its parameters.
 
+The algorithm converges eventually, but the initialization influences the results.
+ 
+\begin{propblock}[How To Do Semi-supervised Generative]
+    Initialization: $\theta = \{P(C_1),P(C_2),\mu^1,\mu^2,\Sigma\}$
+    
+    Step 1: Compute the posterior probability of unlabeled data $P_\theta(C_1|x^u)$ (Depending on model $\theta$).
 
+    Step 2: Update model. $N$: total number of examples. $N_1$: number of examples belonging to $C_1$.
+    $$
+    P(C_1) = \frac{N_1+\sum_{x^u}P(C_1|x^u)}{N}
+    $$
+    And so on. Finally update whole $\theta$ then back to step 1. The new loss function is:
+    $$
+    \log L(\theta) = \sum_{(x^r,\hat y^r)}\log P_\theta(x^r|\hat y^r) + \sum_{x^u} \log P_\theta(x^u)
+    $$
+    $$
+    P_\theta(x^u) = P_\theta(x^u|C_1)P(C_1) + P_\theta(x^u|C_2)P(C_2)
+    $$
+\end{propblock}
 
+\subsection{Semi-supervised Learning Low-density Separation}
 
+The low-density separation hypothesis assumes that the data is either black or white, and there is a significant gap between the two categories of data, that is, at the boundary between the two categories of data density is very low (that is, the volume of data is very good).
 
+The method of self-training is very intuitive. First, it trains a model based on the data with labels. It inputs the data without labels as test data, and gets the data without labels as labels, then a part of the data with a false label is transferred to the data with a label, in the training, cycle back and forth.
+
+\begin{markerblock}
+    This method could not use in regression. And the false label must using hard tag like $[1,0]$ not $[0.79,0.21]$.
+\end{markerblock}
+
+\subsubsection{Entropy-based Regularization}
+
+A regularization method make label have a big difference. The entropy can be get by:
+
+$$
+E(y^u) = - \sum_{m=1}^n y^u_m \ln (y^u_m)
+$$
+
+So we can use regularization to make the loss function better:
+
+$$
+L = \sum_{x^r} C(y^r,\hat y^r) + \lambda \sum_{x^u} E(y^u)
+$$
+
+\subsection{Semi-supervised Learning Smoothness Assumption}
+
+Smoothness assumption: if the input $x$ is similar, then the label values $\hat y$ Should also be similar. But this assumption is not accurate enough, so there are the following strict assumptions:
+
+\begin{itemize}
+    \item x is not uniform. 
+    \item If $x^1$ and $x^2$ are close in a high density region, $y^1$ and $y^2$ are the same.
+\end{itemize}
+
+\subsubsection{Cluster and then Label}
+
+An intuitive approach is to cluster the data first to see where the unlabeled data falls, and then to mark it. However, if the image is manipulated, it is not possible to cluster the image by pixels alone, and such a clustering method is often not good. In this case, we can use deep autoencoder to extract the features of the image, the better result can be obtained by clustering images with features
+
+\subsubsection{Graph-based Approach}
+
+All the data points are made into a graph, if the two points on the graph can be connected, then the label between them is the same. So how do you form a graph, well, some graphs are natural, like links between web pages, or citations between papers, but sometimes you have to build them yourself.
+
+\section{Unsupervised Learning - Word Embeddin}
+
+This is a concrete example of unsupervised learning, so I won't take notes. Here is a quote from someone else's notes.
+
+\begin{quoteblock}
+    \href{https://zhuanlan.zhihu.com/p/396517227}{李宏毅机器学习课程笔记-15.4无监督学习之Word Embedding}
+\end{quoteblock}
 
 
 \end{document}

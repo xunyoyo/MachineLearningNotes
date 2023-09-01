@@ -915,6 +915,82 @@ This is a concrete example of unsupervised learning, so I won't take notes. Here
     \href{https://zhuanlan.zhihu.com/p/396517227}{李宏毅机器学习课程笔记-15.4无监督学习之Word Embedding}
 \end{quoteblock}
 
+\section{Explainable ML}
+
+Why we need Explainable ML? Neural network usually like a black box. To get the reason why machine can get this answer, we need to make it explainable.
+
+There are two types of explainable. One is local explainable, which generally refers to how the machine interprets the example (for example, in the classification problem, how the machine divides a picture of a cat into cats) The other is global explainable, which generally refers to how the machine judges a population's characteristics (for example, in classification problems, what the machine thinks a cat looks like).
+
+\subsection{Local Explanation}
+
+Split the model input object into components, remove or adjust the value of a component, which is important if the change in the component can lead to significant decision changes in the model.
+
+
+\begin{propblock}[Detection Based on Sliding Window]
+    Sliding a gray square on the input image to block the local area, and observing which position is blocked by the gray square can lead to model error judgment.
+\end{propblock}
+
+\begin{propblock}[Detection Based on Gradient]
+    $$
+    (x_1,\cdots,x_i,\cdots,x_n)\to(x_1,\cdots,x_i+\Delta x,\cdots,x_n)
+    $$
+    $$
+    y_k \to y_k + \Delta y
+    $$
+
+    For each dimension, we do a little effect $\Delta x$. The prediction $y_k$ will be $y_k + \Delta y$. Then compute the gradient that we can get the more important part.
+\end{propblock}
+
+But this method have two issues:
+
+\begin{itemize}
+    \item There is a gradient saturation.
+    
+    For example, the length of an elephant's trunk may be a key factor in determining whether an image is an elephant. If the length of the trunk in an image exceeds a threshold, it is considered an elephant, then the partial derivative of the output to the length of the nose is very small.
+
+    \item May be attacked maliciously
+
+    Some artificial noise can destroy the direction of attention of the machine.
+\end{itemize}
+
+\subsection{Global Explanation}
+
+Let the model tell us what the input should look like for the highest possible probability value for a certain category.
+$$
+x^* = arg \max_{x} y_i
+$$
+
+\subsection{Activation Maximization}
+
+Use some regular method like L1,L2 regulation.
+
+$$
+x^* = arg \max_x y_i + R(x)
+$$
+
+\subsection{Using Generator}
+
+Using some generation algorithms, such as VAE, GAN... train a good image generator. Because for the generator, can enter a random vector $z$ to generate a picture $x = G(z)$, and then use the idea of method 1. Then the question becomes:
+$$
+x^* = arg \max_x y_i \to z^* = arg \max_z y_i
+$$
+The whole idea is to replace the constraints $R(x)$ of Method 1 with a generator.
+
+
+\subsection{Using Explainable Model to Explanation}
+
+Some easy-to-explain models (such as Linear Model, Decision Tree, etc.) are used to simulate complex models (such as neural networks) for interpretation. However, the simple model is often limited in representation ability, and can not fully simulate the highly nonlinear model, only to simulate the local characteristics of the complex model. So this approach is really a Local Explanation.
+
+\begin{itemize}
+    \item Local Interpretable Model agnostic-Explanation (LIME)
+    \item Decision tree regularization
+\end{itemize}
+
+\section{Attack ML Models}
+
+
+
+
 
 \end{document}
 艾萨克·牛顿（1643年1月4日$\sim$1727年3月31日），爵士，英国皇家学会会长，英国著名的物理学家、数学家，百科全书式的“全才”，著有《自然哲学的数学原理》《光学》。他在1687年发表的论文《自然定律》里，对万有引力和三大运动定律进行了描述。这些描述奠定了此后三个世纪里物理世界的科学观点，并成为了现代工程学的基础。他通过论证开普勒行星运动定律与他的引力理论间的一致性，展示了地面物体与天体的运动都遵循着相同的自然定律；为太阳中心说提供了强有力的理论支持，并推动了科学革命。牛顿曾经说过一句很著名的话

@@ -988,6 +988,73 @@ Some easy-to-explain models (such as Linear Model, Decision Tree, etc.) are used
 
 \section{Attack ML Models}
 
+The classifiers that are robust to noises and work “most of the time” is not sufficient. We want the classifiers that are robust the inputs that are built to fool the classifier.
+
+We define some symbol: $y^0$: is original picture through network's answer. $y'$: is original picture plus noise's answer. $x^0$: is original picture's vector. $x'$: is original picture plus noise's vector.
+
+Training: 
+$$
+L_{train}(\theta) = C(y^0,y^{true}) \quad (x\quad\text{fixed})
+$$
+
+Non-targeted Attack:
+$$
+L'(x) = - C(y',y^{true}) \quad (\theta\quad\text{fixed})
+$$
+
+Targeted Attack: 
+$$
+L(x') = -C(y',y^{true}) + C(y',y^{false})
+$$
+
+Constraint:
+$$
+d(x^0,x') \le \varepsilon
+$$
+$$
+d_2 := \left\| x^0 - x'\right\|_2 = \sum^n (\Delta x_i)^2
+$$
+$$
+d_{inf} := \left\| x^0 - x'\right\|_{inf} = \max_{i\in n}(\Delta x_i)
+$$
+
+\begin{propblock}[How to Train it]
+    Just like training a neural network, but network parameter $\theta$ is replaced with input $x'$.
+    $$
+    x^* = arg \min L(x')
+    $$
+    If $d(x^0,x^t) > \varepsilon$, do $x^t\gets fix(x^t)$. $fix(x) :=$ For all $x$ fulfill $d(x^0,x) \le \varepsilon$ return the one closest to $x^t$.
+\end{propblock}
+
+There are other attack approaches:
+\begin{itemize}
+    \item FGSM
+    \item Basic iterative method
+    \item L-BFGS
+    \item Deepfool
+    \item JSMA
+    \item C\&W 
+    \item …… only list a few
+\end{itemize}
+
+Adversarial Attack cannot be defended by weight regularization, dropout and model ensemble. There are two types of defense:
+
+\begin{itemize}
+    \item \textbf{Passive defense}: Finding the attached image without modifying the model 
+    \item \textbf{Proactive defense}: Training a model that is robust to adversarial attack
+\end{itemize}
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

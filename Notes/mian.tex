@@ -1044,9 +1044,32 @@ Adversarial Attack cannot be defended by weight regularization, dropout and mode
     \item \textbf{Proactive defense}: Training a model that is robust to adversarial attack
 \end{itemize}
 
+\section{Network Compression}
 
+How to apply the ability of AI to these mobile devices and embedded devices is an urgent problem to be solved. The traditional deep network model is too big and has too many parameters to be used directly. Is it possible to simplify the structure and parameters of the network so that the model can run on mobile phones and microprocessors?
 
+\subsection{Network Pruning}
 
+Some weights or neural in the network are useless. Pruning is a method to address this issue. Cut some useless weight/neural out, make model petite. 
+
+Usually, putting neural out is famous way. Because reducing weight will make the network structure become irregular, difficult to achieve from the code level, it is difficult to parallelize. With neuron reduced, the network is still normalized.
+
+\subsection{Knowledge Distillation}
+
+His idea was to replicate the performance of a large network over a small network, the so-called teacher-student model. Note that the monitor signal for the student network is the output of the teacher network, not the actual label.
+
+\subsection{Parameter Quantization and Architecture Design}
+
+\begin{quoteblock}
+    \href{https://zhuanlan.zhihu.com/p/122977022}{2020机器学习前沿技术----network compression--stephon}
+\end{quoteblock}
+
+\section{Conditional Generation by RNN and Attention}
+
+\begin{quoteblock}
+    \href{https://zhuanlan.zhihu.com/p/388521961}{李宏毅 conditional generation by RNN \& attention 笔记
+--小范同学}
+\end{quoteblock}
 
 
 
